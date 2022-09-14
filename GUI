@@ -1,0 +1,61 @@
+from guizero import *                           # importing everything from guizero
+
+def open_file():                                # name of def statement
+    with open(file_name.value, "r") as f:           # opens the file as the letter f
+        editor.value = f.read()                     # reads the file
+
+def save_file():                                    # name of def statement
+    with open(file_name.value, "w") as f:               # opens the textbox as f
+        f.write(editor.value)                               # writes the file
+    savebtn.disable()
+    savebtn.text_color='#33FF00'
+
+def edit_function():
+    print("Edit option")
+
+def enable_save():
+    savebtn.enable()
+    savebtn.text_color='#00CCCC'
+
+def change_font():
+    editor.font = font.value
+
+def change_size():
+    editor.text_size = size.value
+    editor.resize(1,1)
+    editor.resize("fill", "fill")
+
+def exit_app():
+    app.destroy()
+#############################################
+#############################################
+#############################################
+app = App(title="text editor", bg='#770000')                  # sets variable app to include the title "Text editor"
+
+menubar = MenuBar(app,
+                  
+                  toplevel=["File", "edit"],
+                  
+             options=[
+                 [["open", open_file],["save",save_file],["exit", exit_app]],
+                 [["Edit option 1", edit_function], ["Edit option 2", edit_function]]
+                 
+                 ])
+
+preferences = Box(app, align="bottom", width="fill", border=True)
+size = Slider(preferences, align="left", command=change_size, start=10, end=18)
+font = Combo(preferences, options=["courier", "times new roman", "verdana"], align="left",command=change_font)
+
+file_controls = Box(app, align="top", width="fill")             # variable file_controls has a box which is set to app aligned to the top and with a full width
+
+file_name = TextBox(file_controls, text="text_file.txt",width=40, align="left")# variable file_name has a box which is set to app aligned to the left and with a width of 40 and includes a file name as text
+
+savebtn = PushButton(file_controls, text="Save", align="right", command=save_file)# variable savebtn has a box which is set to app aligned to the top and with a full width
+
+open_button = PushButton(file_controls,text="Open", align="right", command=open_file)# variable open_button has a box which is set to app aligned to the top and with a full width
+
+destroy_Btn = PushButton(file_controls, text="exit", command=exit_app, align="right")
+
+editor = TextBox(app, multiline=True, height="fill", width="fill", command=enable_save)
+
+app.display()
