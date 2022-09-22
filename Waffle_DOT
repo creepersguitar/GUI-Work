@@ -1,0 +1,48 @@
+from guizero import *
+from random import *
+# -------------------------------
+score = 0
+speed = 1000
+GRID_SIZE = 10
+# ----------------------------
+app = App("Destroy the dots")
+# ------------------------------
+score_Display = Text(app, text="Your score is " +
+                     str(score))
+##########################################
+instructions = Text(app, text="Click the dots to destroy them")
+
+def destroy_Dot(x, y):
+    global score
+    if board[x,y].dotty == True:
+        board[x,y].dotty == False
+        board.set_pixel(x, y, "#FFFFFF")
+
+        score += 1
+        score_Display.value = "Your score is " + str(score)
+
+board = Waffle(app, width=GRID_SIZE, height=GRID_SIZE, command=destroy_Dot)
+
+def add_dot():
+    x,y = randint(0,GRID_SIZE-1), randint(0,GRID_SIZE-1)
+    while board[x, y].dotty == True:
+        x,y = randint(0,GRID_SIZE-1), randint(0,GRID_SIZE-1)
+    board[x, y].dotty = True
+    board.set_pixel(x,y, "#EE0000")
+    all_red = True
+    for x in range(GRID_SIZE):
+        for y in range(GRID_SIZE):
+            if board[x,y].color != "#EE0000":
+                all_red = False
+    if all_red:
+        score_Display.value = "You lost! Score: " + str(score)
+    board.after(speed,add_dot)
+#### --------------------------------
+if score > 10:
+    speed = 500
+elif score > 20:
+    speed = 400
+elif score > 30:
+    speed = 200
+board.after(speed,add_dot)
+app.display()
